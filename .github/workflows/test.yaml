@@ -35,6 +35,10 @@ jobs:
         username: ${{ secrets.QUAY_USERNAME }}
         password: ${{ secrets.QUAY_PASSWORD }}
 
+    - name: Test Image
+      run: |
+        docker run -u 1000 -w /srv/test -v $PWD:/srv/test quay.io/2i2c/utoronto-image:test /srv/test/image-tests/run.bash
+
     - name: docker push
       run: docker push quay.io/2i2c/utoronto-image:test
 
