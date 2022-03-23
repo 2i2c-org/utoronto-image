@@ -6,6 +6,9 @@ dependencies:
 
   # language runtimes
   - python=3.8.*
+  
+  # to sync with the version available in Ubuntu 20.04
+  - openssl=1.1.1f
 
   - numpy
   - scipy
