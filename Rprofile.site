@@ -9,4 +9,8 @@ local({
     # Essential for working with libraries like tensorflow
     # Needs to be set here as RStudio doesn't load what's in parent `env`
     Sys.setenv(RETICULATE_PYTHON="/opt/conda/bin/python")
+    
+    # Needs to be set here so RStudio loads the conda openssl library instead of the system one
+    old_ld_lib_path <- Sys.getenv("LD_LIBRARY_PATH")
+    Sys.setenv(LD_LIBRARY_PATH = paste("/opt/conda/lib", old_ld_lib_path, sep = ":"))
 })
