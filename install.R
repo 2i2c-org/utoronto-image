@@ -46,7 +46,7 @@ cran_packages <- c(
   "janitor", "2.1.0",
   "kableExtra", "1.3.4",
   "lme4", "1.1-27.1",
-  "Matching", "4.9-11",
+  "Matching", "4.10-2",
   "multcomp", "1.4-18",
   "partitions", "1.10-4",
   "pheatmap", "1.0.12",
