@@ -112,8 +112,8 @@ RUN apt-get update -qq --yes && \
 
 WORKDIR /home/jovyan
 
-COPY install-miniforge.bash /tmp/install-miniforge.bash
-RUN /tmp/install-miniforge.bash
+COPY install-mambaforge.bash /tmp/install-mambaforge.bash
+RUN /tmp/install-mambaforge.bash
 
 # Needed by RStudio
 RUN apt-get update -qq --yes && \
@@ -187,7 +187,7 @@ RUN /tmp/install.R && \
 
 COPY environment.yml /tmp/
 
-RUN conda env update -p ${CONDA_DIR} -f /tmp/environment.yml && conda clean -afy
+RUN mamba env update -p ${CONDA_DIR} -f /tmp/environment.yml && mamba clean -afy
 
 COPY install-jupyter-extensions.bash /tmp/install-jupyter-extensions.bash
 RUN /tmp/install-jupyter-extensions.bash
