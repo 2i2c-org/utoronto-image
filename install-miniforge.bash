@@ -5,7 +5,7 @@ set -ex
 cd $(dirname $0)
 MINIFORGE_VERSION=4.14.0-0
 
-URL="https://github.com/conda-forge/miniforge/releases/download/4.8.3-5/Miniforge3-${MINIFORGE_VERSION}-Linux-x86_64.sh"
+URL="https://github.com/conda-forge/miniforge/releases/download/4.14.0-0/Miniforge3-${MINIFORGE_VERSION}-Linux-x86_64.sh"
 INSTALLER_PATH=/tmp/miniforge-installer.sh
 
 # make sure we don't do anything funky with user's $HOME
