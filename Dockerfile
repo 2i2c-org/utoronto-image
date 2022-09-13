@@ -34,7 +34,8 @@ RUN apt-get update -qq --yes && \
         tmux \
         wget \
         vim \
-        locales > /dev/null
+        locales > /dev/null  && \
+        rm -rf /var/lib/apt/lists/*
 
 RUN echo "${LC_ALL} UTF-8" > /etc/locale.gen && \
     locale-gen
@@ -55,11 +56,12 @@ RUN apt-get update -qq --yes > /dev/null && \
     r-base-dev=${R_VERSION} \
     r-cran-littler=0.3.11-1.2004.0 \
     nodejs \
-    npm
+    npm  && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install desktop packages
 RUN apt-get update -qq --yes > /dev/null && \
-    apt-get install --yes -qq \
+    apt-get install --yes --no-install-recommends -qq \
         dbus-x11 \
         firefox \
         xfce4 \
@@ -70,12 +72,13 @@ RUN apt-get update -qq --yes > /dev/null && \
         xorg \
         xubuntu-icon-theme \
         openjdk-8-jre \
-        libreoffice > /dev/null
+        libreoffice > /dev/null  && \
+        rm -rf /var/lib/apt/lists/*
 
 # for nbconvert & notebook-to-pdf
 # See https://github.com/utoronto-2i2c/jupyterhub-deploy/issues/35 as well
 RUN apt-get update -qq --yes && \
-    apt-get install --yes -qq \
+    apt-get install --yes --no-install-recommends -qq \
         pandoc \
         texlive-xetex \
         texlive-fonts-recommended \
@@ -93,12 +96,13 @@ RUN apt-get update -qq --yes && \
         libgtk-3-0 \
         libnss3 \
         libxss1 \
-        > /dev/null
+        > /dev/null  && \
+        rm -rf /var/lib/apt/lists/*
 
 # for kableExtra & partitions & prettydoc & RSelenium & scholar & showtext & stopwords & copula
 # See https://github.com/utoronto-2i2c/jupyterhub-deploy/issues/25
 RUN apt-get update -qq --yes && \
-    apt-get install --yes -qq \
+    apt-get install --yes --no-install-recommends -qq \
         libcurl4-openssl-dev \
         libxml2-dev \
         imagemagick \
@@ -108,7 +112,8 @@ RUN apt-get update -qq --yes && \
         libfreetype6-dev \
         libgit2-dev \
         libgsl0-dev \
-        > /dev/null
+        > /dev/null  && \
+        rm -rf /var/lib/apt/lists/*
 
 WORKDIR /home/jovyan
 
@@ -122,7 +127,8 @@ RUN apt-get update -qq --yes && \
         sudo \
         libapparmor1 \
         lsb-release \
-        libclang-dev  > /dev/null
+        libclang-dev  > /dev/null  && \
+        rm -rf /var/lib/apt/lists/*
 
 # 1.3.959 is latest version that works with jupyter-rsession-proxy
 # See https://github.com/jupyterhub/jupyter-rsession-proxy/issues/93#issuecomment-725874693
@@ -141,7 +147,7 @@ RUN curl --silent --location --fail ${SHINY_SERVER_URL} > /tmp/shiny-server.deb 
 # libglpk40 for igraph
 # libzmq3-dev for IRKernel
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+    apt-get install -y --no-install-recommends -qq \
         libgdal26 \
         libgdal-dev \
         gdal-bin \
@@ -150,11 +156,12 @@ RUN apt-get update && \
         libudunits2-0 \
         libxml2 \
         libzmq3-dev \
-        libglpk40 > /dev/null
+        libglpk40 > /dev/null && \
+        rm -rf /var/lib/apt/lists/*
 
 # Needed by staplr R library
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+    apt-get install -y --no-install-recommends -qq \
     default-jdk > /dev/null && \
     R CMD javareconf
 
