@@ -30,3 +30,8 @@ RUN mamba env update -p ${CONDA_DIR} -f /tmp/environment.yml && mamba clean -afy
 # Note that textblob.download_corpora just calls nltk to download corpora
 ENV NLTK_DATA ${CONDA_DIR}/nltk_data
 RUN mkdir -p ${NLTK_DATA} && python -m textblob.download_corpora
+
+RUN jupyter nbclassic-extension install --sys-prefix --py jupyter_nbextensions_configurator --overwrite
+RUN jupyter nbclassic-extension enable --sys-prefix --py jupyter_nbextensions_configurator
+RUN jupyter nbclassic-serverextension install --sys-prefix --py jupyter_nbextensions_configurator --overwrite
+RUN jupyter nbclassic-serverextension enable --sys-prefix --py jupyter_nbextensions_configurator
