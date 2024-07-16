@@ -70,3 +70,6 @@ dependencies:
 
     # From https://2i2c.freshdesk.com/a/tickets/1259
     - pymc==5.10.*
+
+    # Added as part of a support request (TBA freshdesk link)
+    - kaleido==0.2.*
