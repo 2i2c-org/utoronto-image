@@ -47,7 +47,7 @@ RUN mamba env update -p ${CONDA_DIR} -f /tmp/environment.yml && mamba clean -afy
 ENV NLTK_DATA=${CONDA_DIR}/nltk_data
 RUN mkdir -p ${NLTK_DATA} && python -m textblob.download_corpora
 
-playwright install --allow-chromium-download
+RUN playwright install --allow-chromium-download
 
 RUN jupyter nbclassic-extension install --sys-prefix --py jupyter_nbextensions_configurator --overwrite && \
     jupyter nbclassic-extension enable --sys-prefix --py jupyter_nbextensions_configurator && \
