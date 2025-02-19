@@ -29,8 +29,7 @@ RUN apt-get update -qq --yes > /dev/null && \
         texlive-science \
         texlive-xetex \
         cm-super \
-        pandoc \
-        sqlite3
+        pandoc
 
 USER ${NB_USER}
 
