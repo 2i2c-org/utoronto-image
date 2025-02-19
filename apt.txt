@@ -1,0 +1,13 @@
+dvipng
+ghostscript
+texlive-fonts-recommended
+texlive-generic-recommended
+texlive-latex-base
+texlive-latex-extra
+texlive-latex-recommended
+texlive-plain-generic
+texlive-publishers
+texlive-science
+texlive-xetex
+cm-super
+pandoc
