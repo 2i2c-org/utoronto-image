@@ -7,7 +7,9 @@ dependencies:
 
   - networkx==3.2.*
   - nltk==3.8.*
-  - sqlite3
+  - libsqlite
+  - pysqlite
+  - sqlite
   - spacy==3.7.*
   - geopandas==0.14.*
   - geopy==2.4.*
