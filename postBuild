@@ -1,3 +1,0 @@
-set -ex
-
-playwright install --allow-chromium-download
