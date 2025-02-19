@@ -21,7 +21,6 @@ RUN apt-get update -qq --yes > /dev/null && \
         dvipng \
         ghostscript \
         texlive-fonts-recommended \
-        texlive-generic-recommended \
         texlive-latex-base \
         texlive-latex-extra \
         texlive-latex-recommended \
