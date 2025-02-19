@@ -22,6 +22,7 @@ dependencies:
   - nbgitpuller==1.2.*
   - nbconvert
   - playwright
+  - pyqtwebengine
   - jupyter-resource-usage==1.0.*
   - jupytext==1.15.*
   - jupyter-server-proxy>=4.1.2,4.*
