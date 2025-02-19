@@ -17,7 +17,20 @@ RUN apt-get update -qq --yes > /dev/null && \
         xorg \
         xubuntu-icon-theme \
         openjdk-8-jre \
-        libreoffice > /dev/null
+        libreoffice > /dev/null \
+        dvipng \
+        ghostscript \
+        texlive-fonts-recommended \
+        texlive-generic-recommended \
+        texlive-latex-base \
+        texlive-latex-extra \
+        texlive-latex-recommended \
+        texlive-plain-generic \
+        texlive-publishers \
+        texlive-science \
+        texlive-xetex \
+        cm-super \
+        pandoc
 
 USER ${NB_USER}
 
@@ -32,6 +45,8 @@ RUN mamba env update -p ${CONDA_DIR} -f /tmp/environment.yml && mamba clean -afy
 # Note that textblob.download_corpora just calls nltk to download corpora
 ENV NLTK_DATA=${CONDA_DIR}/nltk_data
 RUN mkdir -p ${NLTK_DATA} && python -m textblob.download_corpora
+
+playwright install --allow-chromium-download
 
 RUN jupyter nbclassic-extension install --sys-prefix --py jupyter_nbextensions_configurator --overwrite && \
     jupyter nbclassic-extension enable --sys-prefix --py jupyter_nbextensions_configurator && \
