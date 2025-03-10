@@ -21,7 +21,6 @@ dependencies:
   # Infrastructure things
   - nbgitpuller==1.2.*
   - nbconvert
-  - playwright
   - pyqtwebengine
   - jupyter-resource-usage==1.0.*
   - jupytext==1.15.*
