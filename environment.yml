@@ -73,3 +73,7 @@ dependencies:
 
     # Added as part of a support request (TBA freshdesk link)
     - kaleido==0.2.*
+
+    # from https://2i2c.freshdesk.com/a/tickets/2830
+    - nbconvert[webpdf]
+    - nbconvert[qtpdf]
