@@ -34,6 +34,10 @@ dependencies:
   # https://2i2c.freshdesk.com/a/tickets/697?note=80283596987
   - python-graphviz==0.20.*
 
+  # from https://2i2c.freshdesk.com/a/tickets/2830
+  - nbconvert[webpdf]
+  - nbconvert[qtpdf]
+
   - pip
 
   - pip:
@@ -73,7 +77,3 @@ dependencies:
 
     # Added as part of a support request (TBA freshdesk link)
     - kaleido==0.2.*
-
-    # from https://2i2c.freshdesk.com/a/tickets/2830
-    - nbconvert[webpdf]
-    - nbconvert[qtpdf]
