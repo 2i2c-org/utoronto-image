@@ -25,7 +25,7 @@ jobs:
       with: # make sure username & password/token matches your registry
         DOCKER_REGISTRY: "quay.io"
         IMAGE_NAME: "2i2c/utoronto-image"
-        NO_PUSH: "true"
+        # NO_PUSH: "true"
         # Put repo contents in /srv/repo, rather than the default (/home/jovyan). The home directory
         # is mounted over by persistent storage when we are using the built image in a JupyterHub, and
         # so all contents put in /home/jovyan are lost. This particularly prevents any 'start' script from
