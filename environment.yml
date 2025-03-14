@@ -21,7 +21,7 @@ dependencies:
 
   # Infrastructure things
   - nbgitpuller==1.2.*
-  - nbconvert
+  - nbconvert[webpdf]
   - playwright
   - pyqtwebengine
   - jupyter-resource-usage==1.0.*
