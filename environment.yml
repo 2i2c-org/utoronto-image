@@ -1,5 +1,6 @@
 channels:
   - conda-forge
+  - microsoft
   - nodefaults
 dependencies:
   # for jupyter-desktop-server
@@ -7,6 +8,8 @@ dependencies:
 
   - networkx==3.2.*
   - nltk==3.8.*
+  - libsqlite
+  - sqlite
   - spacy==3.7.*
   - geopandas==0.14.*
   - geopy==2.4.*
@@ -18,6 +21,9 @@ dependencies:
 
   # Infrastructure things
   - nbgitpuller==1.2.*
+  - nbconvert-webpdf
+  - playwright
+  - pyqtwebengine
   - jupyter-resource-usage==1.0.*
   - jupytext==1.15.*
   - jupyter-server-proxy>=4.1.2,4.*
