@@ -23,6 +23,9 @@ jobs:
     - name: Build the image and push it if `NO_PUSH` disabled
       uses: jupyterhub/repo2docker-action@master
       with: # make sure username & password/token matches your registry
+        # Make sure username & password/token pair matches your registry credentials
+        DOCKER_USERNAME: ${{ secrets.QUAY_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
         DOCKER_REGISTRY: "quay.io"
         IMAGE_NAME: "2i2c/utoronto-image"
         # NO_PUSH: "true"
