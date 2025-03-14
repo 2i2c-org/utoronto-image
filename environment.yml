@@ -21,7 +21,7 @@ dependencies:
 
   # Infrastructure things
   - nbgitpuller==1.2.*
-  - nbconvert[webpdf]
+  - nbconvert
   - playwright
   - pyqtwebengine
   - jupyter-resource-usage==1.0.*
@@ -79,3 +79,5 @@ dependencies:
 
     # Added as part of a support request (TBA freshdesk link)
     - kaleido==0.2.*
+
+    - nbconvert[webpdf]
