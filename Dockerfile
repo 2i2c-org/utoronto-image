@@ -45,7 +45,10 @@ RUN mamba env update -p ${CONDA_DIR} -f /tmp/environment.yml && mamba clean -afy
 ENV NLTK_DATA=${CONDA_DIR}/nltk_data
 RUN mkdir -p ${NLTK_DATA} && python -m textblob.download_corpora
 
+USER root
+ENV PLAYWRIGHT_BROWSERS_PATH=/playwright/
 RUN playwright install chromium
+USER ${NB_USER}
 
 COPY ./etc/jupyter /etc/jupyter
 
