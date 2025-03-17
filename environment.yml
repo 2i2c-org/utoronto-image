@@ -7,6 +7,8 @@ dependencies:
 
   - networkx==3.2.*
   - nltk==3.8.*
+  - libsqlite
+  - sqlite
   - spacy==3.7.*
   - geopandas==0.14.*
   - geopy==2.4.*
@@ -18,6 +20,7 @@ dependencies:
 
   # Infrastructure things
   - nbgitpuller==1.2.*
+  - nbconvert-webpdf
   - jupyter-resource-usage==1.0.*
   - jupytext==1.15.*
   - jupyter-server-proxy>=4.1.2,4.*
@@ -37,39 +40,39 @@ dependencies:
   - pip
 
   - pip:
-    # Infrastructure things that don't exist in conda-forge
-    - jupyter-remote-desktop-proxy==1.*
-    - git-credential-helpers==0.2
-    - jupyter-tree-download==1.0.1
+      # Infrastructure things that don't exist in conda-forge
+      - jupyter-remote-desktop-proxy==1.*
+      - git-credential-helpers==0.2
+      - jupyter-tree-download==1.0.1
 
-    # Infrastructure thing that doesn't support notebook 7
-    - jupyter_contrib_nbextensions==0.7.0
+      # Infrastructure thing that doesn't support notebook 7
+      - jupyter_contrib_nbextensions==0.7.0
 
-    - datascience==0.17.*
-    - otter-grader==5.*
+      - datascience==0.17.*
+      - otter-grader==5.*
 
-    # nbextensions
-    - jupyterthemes==0.20.0
-    - markus-jupyter-extension==0.1.4
+      # nbextensions
+      - jupyterthemes==0.20.0
+      - markus-jupyter-extension==0.1.4
 
-    # From https://2i2c.freshdesk.com/a/tickets/57
-    - jax[cpu]
+      # From https://2i2c.freshdesk.com/a/tickets/57
+      - jax[cpu]
 
-    # From https://2i2c.freshdesk.com/a/tickets/187
-    - textblob==0.17.*
+      # From https://2i2c.freshdesk.com/a/tickets/187
+      - textblob==0.17.*
 
-    # Install this from pip because installing from conda conflicts with geopy / geopandas
-    # Re-evaluate once https://github.com/conda-forge/tensorflow-feedstock/pull/353 lands
-    - tensorflow==2.15.*
-    # From https://2i2c.freshdesk.com/a/tickets/1259
-    - tensorflow-probability==0.23.*
+      # Install this from pip because installing from conda conflicts with geopy / geopandas
+      # Re-evaluate once https://github.com/conda-forge/tensorflow-feedstock/pull/353 lands
+      - tensorflow==2.15.*
+      # From https://2i2c.freshdesk.com/a/tickets/1259
+      - tensorflow-probability==0.23.*
 
-    # Install from pip because it does not work from conda-forge atm
-    # https://github.com/conda-forge/rise-feedstock/issues/43 has information
-    - RISE==5.7.*
+      # Install from pip because it does not work from conda-forge atm
+      # https://github.com/conda-forge/rise-feedstock/issues/43 has information
+      - RISE==5.7.*
 
-    # From https://2i2c.freshdesk.com/a/tickets/1259
-    - pymc==5.10.*
+      # From https://2i2c.freshdesk.com/a/tickets/1259
+      - pymc==5.10.*
 
-    # Added as part of a support request (TBA freshdesk link)
-    - kaleido==0.2.*
+      # Added as part of a support request (TBA freshdesk link)
+      - kaleido==0.2.*
