@@ -55,6 +55,8 @@ USER ${NB_USER}
 
 RUN playwright install chromium
 
+COPY ./etc/jupyter /etc/jupyter
+
 RUN jupyter nbclassic-extension install --sys-prefix --py jupyter_nbextensions_configurator --overwrite && \
     jupyter nbclassic-extension enable --sys-prefix --py jupyter_nbextensions_configurator && \
     jupyter nbclassic-serverextension enable --sys-prefix --py jupyter_nbextensions_configurator
