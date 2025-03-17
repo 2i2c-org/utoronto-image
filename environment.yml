@@ -1,6 +1,5 @@
 channels:
   - conda-forge
-  - microsoft
   - nodefaults
 dependencies:
   # for jupyter-desktop-server
