@@ -21,7 +21,7 @@ dependencies:
   # Infrastructure things
   - nbgitpuller==1.2.*
   - nbconvert-webpdf
-  - jupyter-resource-usage==1.0.*
+  - jupyter-resource-usage==1.1.*
   - jupytext==1.15.*
   - jupyter-server-proxy>=4.1.2,4.*
 
@@ -77,5 +77,6 @@ dependencies:
       # Added as part of a support request (TBA freshdesk link)
       - kaleido==0.2.*
 
-      # Bump up jupyterhub explicitly to handle https://github.com/jupyterhub/jupyterhub/issues/4629
+      # Bump up jupyterhub and nbclassic explicitly to handle https://github.com/jupyterhub/jupyterhub/issues/4629
       - jupyterhub>5
+      - nbclassic>=1.2
