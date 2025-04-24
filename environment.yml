@@ -77,7 +77,6 @@ dependencies:
       # Added as part of a support request (TBA freshdesk link)
       - kaleido==0.2.*
 
-      # Bump up jupyterhub, jupyter-server and nbclassic explicitly to handle https://github.com/jupyterhub/jupyterhub/issues/4629
-      - jupyterhub>5
+      # Bump up jupyterhub and nbclassic explicitly to handle https://github.com/jupyterhub/jupyterhub/issues/4629
+      - jupyterhub>4.1<5
       - nbclassic>=1.2
-      - jupyter-server>=2.15
