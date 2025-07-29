@@ -62,8 +62,8 @@ dependencies:
       - jupyter-tree-download==1.0.1
 
       # Bump up jupyterhub and nbclassic explicitly to handle https://github.com/jupyterhub/jupyterhub/issues/4629
-      - jupyterhub==4.1.6
-      - nbclassic>=1.2
+      - jupyterhub==5.3.*
+      - nbclassic==1.3.*
       ### Add nbclassic extensions
       # Infrastructure thing that doesn't support notebook 7
       - jupyter_contrib_nbextensions==0.7.0
