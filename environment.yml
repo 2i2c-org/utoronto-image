@@ -54,6 +54,9 @@ dependencies:
   - datascience==0.17.*
   - otter-grader==5.*
 
+  # From https://2i2c.freshdesk.com/a/tickets/4003
+  - louvain==0.8.*
+
   - pip
 
   - pip:
