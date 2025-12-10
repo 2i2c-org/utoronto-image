@@ -1,4 +1,6 @@
 channels:
+  - chrisroadmap
+  - claut
   - conda-forge
   - nodefaults
 dependencies:
@@ -65,6 +67,25 @@ dependencies:
   # Add nbclassic extensions (Infrastructure thing that doesn't support notebook 7)
   - jupyter_contrib_nbextensions==0.7.0
   - jupyterthemes==0.20.0
+
+  # From https://2i2c.freshdesk.com/a/tickets/4462
+  - scipy==1.16.*
+  - xarray==2025.9.*
+  - pandas==2.3.*
+  - numpy==2.2.*
+  - zarr==2.3.*
+  - esgf-pyclient==0.3.*
+  - gcsfs==2025.10.*
+  - matplotlib==3.10.*
+  - netcdf4==1.7.*
+  - requests==2.32.*
+  - climlab==0.9.*
+  - statsmodels==0.14.*
+  - cartopy==0.25.*
+  # From chrisroadmap channel
+  - fair==1.6.*
+  # From claut channel
+  - ec3==2.2.*
 
   - pip
 
