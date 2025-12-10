@@ -73,7 +73,7 @@ dependencies:
   - xarray==2025.9.*
   - pandas==2.3.*
   - numpy==2.2.*
-  - zarr==2.3.*
+  - zarr==3.1.*
   - esgf-pyclient==0.3.*
   - gcsfs==2025.10.*
   - matplotlib==3.10.*
