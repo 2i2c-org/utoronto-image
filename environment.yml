@@ -82,8 +82,8 @@ dependencies:
 
   - torchinfo==1.8.*
   - torchmetrics==1.8.*
-  - torchvision==0.25.*
-  - pytorch==2.10.*
+  - torchvision==0.24.*
+  - pytorch==2.8.*
 
   - pip
 
