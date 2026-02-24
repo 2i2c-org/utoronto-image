@@ -80,6 +80,11 @@ dependencies:
   # Explicitly request JupyterLab
   - jupyterlab==4.*
 
+  - torchinfo==1.8.*
+  - torchmetrics==1.8.*
+  - torchvision==0.21.*
+  - pytorch==2.6.*
+
   - pip
 
   - pip:
