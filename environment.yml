@@ -79,6 +79,7 @@ dependencies:
   - ec3==2.2.*
   # Explicitly request JupyterLab
   - jupyterlab==4.*
+  - jupyter-resource-usage
 
   - torchinfo==1.8.*
   - torchmetrics==1.8.*
