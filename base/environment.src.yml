@@ -83,17 +83,17 @@ dependencies:
   - torchvision
   - pytorch
 
-    ##### Security constraints #####
-    # eMudhra Intermediate CA Compromise
-    # https://discuss.python.org/t/information-for-python-users-regarding-emudhra-emsign-ca-certificate-security-incident/109576
-  - certifi
-  - pip
-  - ca-certificates
-  - python
-    # Brotli vuln
-  - brotli
-    ######################################
-    #
+  ##### Security constraints #####
+  # eMudhra Intermediate CA Compromise
+  # https://discuss.python.org/t/information-for-python-users-regarding-emudhra-emsign-ca-certificate-security-incident/109576
+  - certifi>=2026.10.19
+  - pip>=26.2.2
+  - ca-certificates>=2026.10.19
+  - python~=3.14.10|~=3.13.18|~=3.12.16|>=3.15.2
+  # Brotli vuln
+  - brotli>=1.2.1
+  ######################################
+
   # Bump up jupyterhub and nbclassic explicitly to handle https://github.com/jupyterhub/jupyterhub/issues/4629
   - jupyterhub-singleuser>=5.3.*
   - nbclassic>=1.3.*
