@@ -1,4 +1,5 @@
-FROM quay.io/jupyter/scipy-notebook:2026-10-26 
+ARG BASE_IMAGE_TAG=latest
+FROM quay.io/jupyter/scipy-notebook:$BASE_IMAGE_TAG
 
 # Install desktop packages
 # Also installs 'zip' needed by jupyter-tree-download
@@ -10,7 +11,8 @@ RUN apt-get update --yes -qq > /dev/null && \
 USER ${NB_USER}
 
 COPY environment.yml /tmp/
-RUN mamba env update -p ${CONDA_DIR} -f /tmp/environment.yml && \
+RUN mamba update mamba && \
+    mamba install -f /tmp/environment.yml && \
     mamba clean -afy
 
 # For https://2i2c.freshdesk.com/a/tickets/187
