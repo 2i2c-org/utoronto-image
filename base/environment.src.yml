@@ -103,9 +103,6 @@ dependencies:
       - git-credential-helpers
       - jupyter-tree-download
 
-      # Bump up jupyterhub and nbclassic explicitly to handle https://github.com/jupyterhub/jupyterhub/issues/4629
-      - jupyterhub
-      - nbclassic
       ### Add nbclassic extensions
       # Infrastructure thing that doesn't support notebook 7
       - jupyter_contrib_nbextensions

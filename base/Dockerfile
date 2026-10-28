@@ -11,8 +11,7 @@ RUN apt-get update --yes -qq > /dev/null && \
 USER ${NB_USER}
 
 COPY environment.yml /tmp/
-RUN mamba update mamba && \
-    mamba install -f /tmp/environment.yml && \
+RUN mamba install -f /tmp/environment.yml && \
     mamba clean -afy
 
 # For https://2i2c.freshdesk.com/a/tickets/187

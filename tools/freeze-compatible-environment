@@ -4,11 +4,11 @@
 # requires-python = ">=3.11"
 # dependencies = [
 #   "ruamel.yaml",
+#   "packaging"
 # ]
 # ///
 from ruamel.yaml import YAML
 import argparse
-import json
 import pathlib
 import subprocess
 import sys
@@ -18,18 +18,39 @@ import warnings
 yaml = YAML(typ="rt")
 
 
+PACKAGE_DENY_LIST = {"mamba"}
+
 def parse_resolved_spec(name: str):
     pkg, version, _ = name.split("=", 3)
     return pkg, version
 
 
-def parse_resolved_pip_spec(name: str):
-    return name.split("==", 2)
+def normalize_python_name(name: str) -> str:
+    # Vendored from https://github.com/pypa/packaging/blob/b635dc5e60d6fb8020416c6bab9421964bfa342a/src/packaging/utils.py#L120-L124
+    value = name.lower().replace("_", "-").replace(".", "-")
+    # Condense repeats (faster than regex)
+    while "--" in value:
+        value = value.replace("--", "-")
+    return value
 
 
 def parse_request_package(request: str) -> str:
     match = re.split(r"[!=><~]", request, maxsplit=1)
     return match[0]
+
+
+def parse_resolved_pip_spec(name: str):
+    pkg, version = name.split("==", 2)
+    return normalize_python_name(pkg), version
+
+
+def parse_request_py_package(request: str) -> str:
+    match = re.split(r"[!=><~]", request, maxsplit=1)
+    return normalize_python_name(match[0])
+
+
+def filter_warnings(output: str) -> str:
+    return "\n".join(l for l in output.splitlines() if not l.startswith("WARNING"))
 
 
 def get_compatible_constraint(pkg: str, version: str):
@@ -58,9 +79,11 @@ if __name__ == "__main__":
         "-t",
         args.image,
     )
-    solved_spec = json.loads(
-        subprocess.check_output(
-            [*docker_run_args, "mamba", "env", "export", "--json"],
+    solved_spec = yaml.load(
+        filter_warnings(
+            subprocess.check_output(
+                [*docker_run_args, "mamba", "env", "export"], text=True
+            )
         )
     )
 
@@ -84,9 +107,18 @@ if __name__ == "__main__":
     # Parse the *requested* packages, retrieve their resolutions, and build compatible-version constraints. Warn about dev/post/pre-releases.
     # Here, we're assuming that for _any_ package we want x.y.*
     # e.g. jupyterhub~=5.3.0
-    exhaustive_top_level_spec = json.loads(
-        subprocess.check_output(
-            [*docker_run_args, "mamba", "env", "export", "--json", "--from-history"],
+    exhaustive_top_level_spec = yaml.load(
+        filter_warnings(
+            subprocess.check_output(
+                [
+                    *docker_run_args,
+                    "mamba",
+                    "env",
+                    "export",
+                    "--from-history",
+                ],
+                text=True,
+            )
         )
     )
 
@@ -100,7 +132,8 @@ if __name__ == "__main__":
         if isinstance(spec, str):
             # Build constraint from history of env against resolution
             pkg = parse_request_package(spec)
-            if pkg in solved_versions:
+            # Do not consider certain packages, e.g. mamba
+            if pkg in solved_versions and pkg not in PACKAGE_DENY_LIST:
                 pkg_to_constraint[pkg] = get_compatible_constraint(
                     pkg, solved_versions[pkg]
                 )
@@ -108,7 +141,7 @@ if __name__ == "__main__":
         elif isinstance(spec, dict) and "pip" in spec:
             exhaustive_top_level_pip_dependencies = spec["pip"]
             for pip_spec in exhaustive_top_level_pip_dependencies:
-                pkg = parse_request_package(pip_spec)
+                pkg = parse_request_py_package(pip_spec)
                 if pkg in solved_pip_versions:
                     pip_pkg_to_constraint[pkg] = get_compatible_constraint(
                         pkg, solved_pip_versions[pkg]
@@ -136,7 +169,7 @@ if __name__ == "__main__":
             requested_pip_spec = spec
             requested_pip_dependencies = requested_pip_spec["pip"]
             for j, pip_spec in enumerate(requested_pip_dependencies):
-                pkg = parse_request_package(pip_spec)
+                pkg = parse_request_py_package(pip_spec)
                 if pkg in pip_pkg_to_constraint:
                     requested_pip_dependencies[j] = pip_pkg_to_constraint[pkg]
                 seen_pip_packages.add(pkg)
@@ -153,11 +186,12 @@ if __name__ == "__main__":
     missing_pip_pkgs = set(pip_pkg_to_constraint.keys()) - seen_pip_packages
     if missing_pip_pkgs:
         if requested_pip_spec is None:
-            user_dependencies.insert(
-                len(user_dependencies),
-                "pip",
-                [pip_pkg_to_constraint[k] for k in missing_pip_pkgs],
-                comment="Base image resolutions",
+            user_dependencies.append(
+                {"pip": [pip_pkg_to_constraint[k] for k in missing_pip_pkgs]}
+            )
+            # Add comment to end of line
+            user_dependencies.yaml_add_eol_comment(
+                "Base image resolution", len(user_dependencies) - 1, 0
             )
         else:
             pip_packages = requested_pip_spec["pip"]
