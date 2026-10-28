@@ -20,6 +20,9 @@ group "default" {
 target "base" {
   context = "base/"
   tags = image_tags(image_name_prefix)
+  args = {
+    BASE_IMAGE_TAG = "2026-10-26"
+  }
 }
 
 target "patches" {

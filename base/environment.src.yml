@@ -12,13 +12,13 @@ dependencies:
   - geopandas
   - geopy
 
-  # From https://github.com/utoronto-2i2c/jupyterhub-deploy/issues/29
+    # From https://github.com/utoronto-2i2c/jupyterhub-deploy/issues/29
   - astroquery
   - astropy
   - galpy
   - libgfortran
 
-  # Infrastructure things
+    # Infrastructure things
   - nbgitpuller
   - nbconvert-webpdf
   - playwright
@@ -27,7 +27,7 @@ dependencies:
   - jupytext
   - jupyter-server-proxy
 
-  # From https://2i2c.freshdesk.com/a/tickets/497
+    # From https://2i2c.freshdesk.com/a/tickets/497
   - contextily
   - libpysal
   - esda
@@ -35,17 +35,17 @@ dependencies:
   - xlrd
   - numba
 
-  # python-graphviz installed on request by Scott Schwartz in
-  # https://2i2c.freshdesk.com/a/tickets/697?note
+    # python-graphviz installed on request by Scott Schwartz in
+    # https://2i2c.freshdesk.com/a/tickets/697?note
   - python-graphviz
 
   - tensorflow
-  # From https://2i2c.freshdesk.com/a/tickets/1259
+    # From https://2i2c.freshdesk.com/a/tickets/1259
   - tensorflow-probability
 
   - jax
 
-  # From https://2i2c.freshdesk.com/a/tickets/1259
+    # From https://2i2c.freshdesk.com/a/tickets/1259
   - pymc
 
   - jupyter-remote-desktop-proxy
@@ -53,11 +53,11 @@ dependencies:
   - datascience
   - otter-grader
 
-  # From https://2i2c.freshdesk.com/a/tickets/4003
-  # Superceded louvain by https://github.com/vtraag/leidenalg
+    # From https://2i2c.freshdesk.com/a/tickets/4003
+    # Superceded louvain by https://github.com/vtraag/leidenalg
   - leidenalg
 
-  # From https://2i2c.freshdesk.com/a/tickets/4462
+    # From https://2i2c.freshdesk.com/a/tickets/4462
   - scipy
   - xarray
   - pandas
@@ -71,11 +71,11 @@ dependencies:
   - climlab
   - statsmodels
   - cartopy
-  # From chrisroadmap channel
+    # From chrisroadmap channel
   - fair
-  # From claut channel
+    # From claut channel
   - ec3
-  # Explicitly request JupyterLab
+    # Explicitly request JupyterLab
   - jupyterlab
 
   - torchinfo
@@ -83,16 +83,20 @@ dependencies:
   - torchvision
   - pytorch
 
-  ##### Security constraints #####
-  # eMudhra Intermediate CA Compromise
-  # https://discuss.python.org/t/information-for-python-users-regarding-emudhra-emsign-ca-certificate-security-incident/109576
+    ##### Security constraints #####
+    # eMudhra Intermediate CA Compromise
+    # https://discuss.python.org/t/information-for-python-users-regarding-emudhra-emsign-ca-certificate-security-incident/109576
   - certifi
   - pip
   - ca-certificates
   - python
-  # Brotli vuln
+    # Brotli vuln
   - brotli
-  ######################################
+    ######################################
+    #
+  # Bump up jupyterhub and nbclassic explicitly to handle https://github.com/jupyterhub/jupyterhub/issues/4629
+  - jupyterhub-singleuser>=5.3.*
+  - nbclassic>=1.3.*
 
   - pip:
       # Infrastructure things that don't exist in conda-forge

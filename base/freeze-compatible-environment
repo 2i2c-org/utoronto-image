@@ -1,0 +1,171 @@
+#!/usr/bin/env python
+
+# /// script
+# requires-python = ">=3.11"
+# dependencies = [
+#   "ruamel.yaml",
+# ]
+# ///
+from ruamel.yaml import YAML
+import argparse
+import json
+import pathlib
+import subprocess
+import sys
+import re
+import warnings
+
+yaml = YAML(typ="rt")
+
+
+def parse_resolved_spec(name: str):
+    pkg, version, _ = name.split("=", 3)
+    return pkg, version
+
+
+def parse_resolved_pip_spec(name: str):
+    return name.split("==", 2)
+
+
+def parse_request_package(request: str) -> str:
+    match = re.split(r"[!=><~]", request, maxsplit=1)
+    return match[0]
+
+
+def get_compatible_constraint(pkg: str, version: str):
+    if not re.match(r"^(\d+\.){0,2}\d+$", version):
+        warnings.warn(f"Expected integer-only version, received {version}")
+    triple_version = ".".join([*version.split("."), "0", "0", "0"][:3])
+    return f"{pkg}~={triple_version}"
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("image", help="Built docker image")
+    parser.add_argument("spec", type=pathlib.Path, help="Source image spec")
+    parser.add_argument("--docker", default="docker")
+    parser.add_argument("--output", type=argparse.FileType("w"), default=sys.stdout)
+    args = parser.parse_args()
+
+    # Parse the resolutions into a series of package versions
+    # e.g. jupyterhub==5.3.0.beta1
+    docker_run_args = (
+        args.docker,
+        "run",
+        "--rm",
+        "--env",
+        "JUPYTER_DOCKER_STACKS_QUIET=1",
+        "-t",
+        args.image,
+    )
+    solved_spec = json.loads(
+        subprocess.check_output(
+            [*docker_run_args, "mamba", "env", "export", "--json"],
+        )
+    )
+
+    solved_versions = dict(
+        parse_resolved_spec(n)
+        for n in solved_spec["dependencies"]
+        if isinstance(n, str)
+    )
+
+    try:
+        pip_spec = next(
+            p["pip"]
+            for p in solved_spec["dependencies"]
+            if isinstance(p, dict) and "pip" in p
+        )
+    except StopIteration:
+        solved_pip_versions = {}
+    else:
+        solved_pip_versions = dict(parse_resolved_pip_spec(n) for n in pip_spec)
+
+    # Parse the *requested* packages, retrieve their resolutions, and build compatible-version constraints. Warn about dev/post/pre-releases.
+    # Here, we're assuming that for _any_ package we want x.y.*
+    # e.g. jupyterhub~=5.3.0
+    exhaustive_top_level_spec = json.loads(
+        subprocess.check_output(
+            [*docker_run_args, "mamba", "env", "export", "--json", "--from-history"],
+        )
+    )
+
+    # Map any *requested* package name onto new constraint
+    pkg_to_constraint = {}
+    pip_pkg_to_constraint = {}
+
+    exhaustive_top_level_dependencies = exhaustive_top_level_spec["dependencies"]
+    for spec in exhaustive_top_level_dependencies:
+        # Conda dependencies
+        if isinstance(spec, str):
+            # Build constraint from history of env against resolution
+            pkg = parse_request_package(spec)
+            if pkg in solved_versions:
+                pkg_to_constraint[pkg] = get_compatible_constraint(
+                    pkg, solved_versions[pkg]
+                )
+        # Pip dependencies
+        elif isinstance(spec, dict) and "pip" in spec:
+            exhaustive_top_level_pip_dependencies = spec["pip"]
+            for pip_spec in exhaustive_top_level_pip_dependencies:
+                pkg = parse_request_package(pip_spec)
+                if pkg in solved_pip_versions:
+                    pip_pkg_to_constraint[pkg] = get_compatible_constraint(
+                        pkg, solved_pip_versions[pkg]
+                    )
+
+    # Now, update the user env file with resolutions for _those_ deps
+    user_spec = yaml.load(args.spec.read_text())
+    user_dependencies = user_spec["dependencies"]
+
+    seen_packages = set()
+    seen_pip_packages = set()
+
+    requested_pip_spec = None
+
+    # First, add constraints for things that we request in our YAML
+    for i, spec in enumerate(user_dependencies):
+        # Conda dependencies
+        if isinstance(spec, str):
+            pkg = parse_request_package(spec)
+            if pkg in pkg_to_constraint:
+                user_dependencies[i] = pkg_to_constraint[pkg]
+            seen_packages.add(pkg)
+        # Pip dependencies
+        elif isinstance(spec, dict) and "pip" in spec:
+            requested_pip_spec = spec
+            requested_pip_dependencies = requested_pip_spec["pip"]
+            for j, pip_spec in enumerate(requested_pip_dependencies):
+                pkg = parse_request_package(pip_spec)
+                if pkg in pip_pkg_to_constraint:
+                    requested_pip_dependencies[j] = pip_pkg_to_constraint[pkg]
+                seen_pip_packages.add(pkg)
+
+    # Then add constraints for things that the base image defines
+    for missing_pkg in set(pkg_to_constraint.keys()) - seen_packages:
+        # Add comment to end of line
+        user_dependencies.append(pkg_to_constraint[missing_pkg])
+        user_dependencies.yaml_add_eol_comment(
+            f"Base image resolution for {missing_pkg}", len(user_dependencies) - 1, 0
+        )
+
+    # Finally add pip constraints as above
+    missing_pip_pkgs = set(pip_pkg_to_constraint.keys()) - seen_pip_packages
+    if missing_pip_pkgs:
+        if requested_pip_spec is None:
+            user_dependencies.insert(
+                len(user_dependencies),
+                "pip",
+                [pip_pkg_to_constraint[k] for k in missing_pip_pkgs],
+                comment="Base image resolutions",
+            )
+        else:
+            pip_packages = requested_pip_spec["pip"]
+            for k in missing_pip_pkgs:
+                pip_packages.append(pip_pkg_to_constraint[k])
+                # Add comment to end of line
+                pip_packages.yaml_add_eol_comment(
+                    f"Base image resolution for {k}", len(pip_packages) - 1, 0
+                )
+
+    yaml.dump(user_spec, args.output)
