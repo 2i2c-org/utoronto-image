@@ -23,17 +23,34 @@ jobs:
     - name: Checkout files in repo
       uses: actions/checkout@main
 
-    - name: Build and push the image to quay.io
-      uses: jupyterhub/repo2docker-action@master
+    - name: Login to DockerHub
+      uses: docker/login-action@v4
       with:
-        # Make sure username & password/token pair matches your registry credentials
-        DOCKER_USERNAME: ${{ secrets.QUAY_USERNAME }}
-        DOCKER_PASSWORD: ${{ secrets.QUAY_PASSWORD }}
-        DOCKER_REGISTRY: "quay.io"
-        # Disable pushing a 'latest' tag, as this often just causes confusion
-        LATEST_TAG_OFF: true
-        IMAGE_NAME: "2i2c/utoronto-image"
+        registry: quay.io
+        username: ${{ secrets.QUAY_USERNAME }}
+        password: ${{ secrets.QUAY_PASSWORD }}
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v4
+
+    # Source - https://stackoverflow.com/a/59819441
+    # Posted by peterevans, modified by community. See post 'Timeline' for change history
+    # Retrieved 2026-06-09, License - CC BY-SA 4.0
+    - name: Set git sha
+      id: vars
+      run: echo "git_sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
+    - name: Build and push
+      uses: docker/bake-action@v7
+      with:
+        source: .
+        push: true
+        vars: |
+          image_name_prefix=${{ vars.IMAGE_PREFIX }}
+          git_sha=${{ steps.vars.outputs.git_sha_short}}
+
 
     # Lets us monitor disks getting full as images get bigger over time
     - name: Show how much disk space is left
       run: df -h
+

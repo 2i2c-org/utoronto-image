@@ -1,4 +1,4 @@
-FROM quay.io/jupyter/scipy-notebook:2025-07-28
+FROM quay.io/jupyter/scipy-notebook:2026-10-26 
 
 # Install desktop packages
 # Also installs 'zip' needed by jupyter-tree-download
