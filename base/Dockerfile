@@ -11,8 +11,10 @@ RUN apt-get update --yes -qq > /dev/null && \
 USER ${NB_USER}
 
 COPY environment.yml /tmp/
-RUN mamba install -f /tmp/environment.yml && \
-    mamba clean -afy
+RUN conda install conda-rattler-solver && \
+    conda config --set solver rattler && \
+    conda install -f /tmp/environment.yml && \
+    conda clean -afy
 
 # For https://2i2c.freshdesk.com/a/tickets/187
 # If we don't set `NLTK_DATA`, the data gets downloaded onto $HOME, which
