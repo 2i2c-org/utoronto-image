@@ -20,6 +20,7 @@ yaml = YAML(typ="rt")
 
 PACKAGE_DENY_LIST = {"mamba"}
 
+
 def parse_resolved_spec(name: str):
     pkg, version, _ = name.split("=", 3)
     return pkg, version
@@ -66,6 +67,7 @@ if __name__ == "__main__":
     parser.add_argument("spec", type=pathlib.Path, help="Source image spec")
     parser.add_argument("--docker", default="docker")
     parser.add_argument("--output", type=argparse.FileType("w"), default=sys.stdout)
+    parser.add_argument("--freeze-base-pip", action="store_true")
     args = parser.parse_args()
 
     # Parse the resolutions into a series of package versions
@@ -182,24 +184,26 @@ if __name__ == "__main__":
             f"Base image resolution for {missing_pkg}", len(user_dependencies) - 1, 0
         )
 
-    # Finally add pip constraints as above
-    missing_pip_pkgs = set(pip_pkg_to_constraint.keys()) - seen_pip_packages
-    if missing_pip_pkgs:
-        if requested_pip_spec is None:
-            user_dependencies.append(
-                {"pip": [pip_pkg_to_constraint[k] for k in missing_pip_pkgs]}
-            )
-            # Add comment to end of line
-            user_dependencies.yaml_add_eol_comment(
-                "Base image resolution", len(user_dependencies) - 1, 0
-            )
-        else:
-            pip_packages = requested_pip_spec["pip"]
-            for k in missing_pip_pkgs:
-                pip_packages.append(pip_pkg_to_constraint[k])
-                # Add comment to end of line
-                pip_packages.yaml_add_eol_comment(
-                    f"Base image resolution for {k}", len(pip_packages) - 1, 0
+    # The history mechanism reports solved dependencies, which makes it hard to figure out top-level vs low level
+    if args.freeze_base_pip:
+        # Finally add pip constraints as above
+        missing_pip_pkgs = set(pip_pkg_to_constraint.keys()) - seen_pip_packages
+        if missing_pip_pkgs:
+            if requested_pip_spec is None:
+                user_dependencies.append(
+                    {"pip": [pip_pkg_to_constraint[k] for k in missing_pip_pkgs]}
                 )
+                # Add comment to end of line
+                user_dependencies.yaml_add_eol_comment(
+                    "Base image resolution", len(user_dependencies) - 1, 0
+                )
+            else:
+                pip_packages = requested_pip_spec["pip"]
+                for k in missing_pip_pkgs:
+                    pip_packages.append(pip_pkg_to_constraint[k])
+                    # Add comment to end of line
+                    pip_packages.yaml_add_eol_comment(
+                        f"Base image resolution for {k}", len(pip_packages) - 1, 0
+                    )
 
     yaml.dump(user_spec, args.output)
