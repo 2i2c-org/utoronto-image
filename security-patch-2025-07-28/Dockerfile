@@ -3,8 +3,11 @@ USER root
 RUN sed \
     -e 's|^mozilla/emSign_ECC_Root_CA_-_G3.crt|!&|' \
     -e 's|^mozilla/Comodo_AAA_Services_root.crt|!&|' \
-    /etc/ca-certificates.conf > /tmp/ca-certificates.conf
+    /etc/ca-certificates.conf > /etc/ca-certificates.conf && \
+    update-ca-certificates
 COPY environment.yml /tmp/
-RUN mamba install -f /tmp/environment.yml && \
-    mamba clean -afy
+RUN conda install conda-rattler-solver && \
+    conda config --set solver rattler && \
+    conda install -f /tmp/environment.yml && \
+    conda clean -afy
 USER ${NB_USER}
