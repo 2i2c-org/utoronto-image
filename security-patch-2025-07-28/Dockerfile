@@ -6,6 +6,11 @@ RUN sed \
     -i /etc/ca-certificates.conf && \
     update-ca-certificates
 COPY environment.yml /tmp/
-RUN mamba install --file /tmp/environment.yml && \
+RUN mamba update mamba && \
+    mamba install "python~=3.12.16" \
+    "certifi>=2026.10.19" \
+    "ca-certificates>=2026.10.19" \
+    "pip>=26.2.2" \
+    "brotli>=1.2.1" && \
     mamba clean -afy
 USER ${NB_USER}
